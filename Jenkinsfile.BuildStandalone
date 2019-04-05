@@ -74,6 +74,7 @@ pipeline {
 
             steps {
                 script {
+                    echo "${env.UPLOAD}"
                     uploadFileToWeb standaloneApk, "${env.UPLOAD}"
                 }
             }
