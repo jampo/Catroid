@@ -118,6 +118,25 @@ pipeline {
                                 }
                             }
                         }
+                    }
+                    post {
+                        always {
+                            stash name: 'logParserRules', includes: 'buildScripts/log_parser_rules'
+                        }
+                    }
+                }
+
+                stage('2') {
+                    agent {
+                        dockerfile {
+                            filename d.fileName
+                            dir d.dir
+                            additionalBuildArgs d.buildArgs
+                            args d.args
+                            label d.label
+                        }
+                    }
+                    stages {
 
                         stage('Unit Tests') {
                             steps {
@@ -146,6 +165,10 @@ pipeline {
                         }
 
                         stage('Legacy Tests') {
+                            when {
+                                expression { isJobStartedByTimer() }
+                            }
+
                             steps {
                                 sh '''./gradlew -PenableCoverage -PlogcatFile=legacy_logcat.txt -Pemulator=android19 \
                                             startEmulator createCatroidDebugAndroidTestCoverageReport \
@@ -201,7 +224,7 @@ pipeline {
                     }
                 }
 
-                stage('2') {
+                stage('3') {
                     agent {
                         dockerfile {
                             filename d.fileName
