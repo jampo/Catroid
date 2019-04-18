@@ -15,7 +15,7 @@ class DockerParameters {
     def buildArgs = '--build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) --build-arg KVM_GROUP_ID=$(getent group kvm | cut -d: -f3)'
 
     def args = '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=6.5G'
-    def label = 'LimitedEmulator'
+    def label = 'MAC'
 }
 
 def d = new DockerParameters()
