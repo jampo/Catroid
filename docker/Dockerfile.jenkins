@@ -63,7 +63,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         less \
     && rm -rf /var/lib/apt/lists/* \
     && gem update --system \
-	#&& gem install rubygems-update \
+	&& curl -sSL https://get.rvm.io | bash -s stable \
+	&& rvm install 2.7 \
+	&& rvm use 2.7 \
+	&& gem install fastlane -NV \
+	&& gem install rubygems-update \
     #&& gem install fastlane -NV \
     && apt-get purge -y --auto-remove \
         ruby-dev \
