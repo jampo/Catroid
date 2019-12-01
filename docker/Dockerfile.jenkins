@@ -57,12 +57,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN apt-get update && apt-get install -y --no-install-recommends \
         rubygems \
         ruby-dev \
-		ruby 2.4 \
+		ruby \
         g++ \
         make \
         less \
     && rm -rf /var/lib/apt/lists/* \
     && gem update --system \
+	&& gem install rubygems-update \
     && gem install fastlane -NV \
     && apt-get purge -y --auto-remove \
         ruby-dev \
