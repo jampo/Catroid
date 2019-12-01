@@ -94,6 +94,8 @@ pipeline {
 								sh "fastlane actions"
 								echo 'ruby version'
 								sh "ruby --version"
+								echo 'rbenv version'
+								sh "rbenv --version"
 							}
 						}
                     }
