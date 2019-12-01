@@ -54,7 +54,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Fastlane
-RUN apt-get remove ruby
+RUN apt-get remove -y rubygems \ rubygems
 RUN apt-get update && apt-get install -y --no-install-recommends \
         rubygems \
         ruby-dev \
