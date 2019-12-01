@@ -73,6 +73,20 @@ pipeline {
     }
 
     stages {
+        stage('All') {
+            parallel {
+                stage('1') {
+                    agent {
+                        dockerfile {
+                            filename d.fileName
+                            dir d.dir
+                            additionalBuildArgs d.buildArgs
+                            args d.args
+                            label useDebugLabelParameter(d.label)
+                        }
+                    }
+
+                    stages {
 						stage('fastlane version') {
 							steps {
 								echo 'fastlane version'
@@ -82,7 +96,16 @@ pipeline {
 								sh "ruby --version"
 							}
 						}
-           }
+                    }
+                    post {
+                        always {
+                            stash name: 'logParserRules', includes: 'buildScripts/log_parser_rules'
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     post {
         always {
