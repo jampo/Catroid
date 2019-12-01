@@ -63,7 +63,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         less \
     && rm -rf /var/lib/apt/lists/* \
     && gem update --system \
-	&& curl -sSL https://get.rvm.io | bash -s stable \
+	&& command curl -sSL https://rvm.io/mpapis.asc | gpg --import - \
 	&& rvm install 2.7 \
 	&& rvm use 2.7 \
 	&& gem install fastlane -NV \
