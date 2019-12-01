@@ -57,16 +57,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN apt-get update && apt-get install -y --no-install-recommends \
         rubygems \
         ruby-dev \
-		ruby \
+		ruby 2.4\
         g++ \
         make \
         less \
     && rm -rf /var/lib/apt/lists/* \
     && gem update --system \
-	&& command curl -sSL https://rvm.io/mpapis.asc | gpg --import - \
-	&& rvm install 2.7 \
-	&& rvm use 2.7 \
-	&& gem install fastlane -NV \
 	&& gem install rubygems-update \
     #&& gem install fastlane -NV \
     && apt-get purge -y --auto-remove \
