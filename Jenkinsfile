@@ -96,6 +96,8 @@ pipeline {
 								sh "ruby --version"
 								echo 'rbenv version'
 								sh "rbenv --version"
+								echo 'rmv version'
+								sh "rmv --version"
 							}
 						}
                     }
