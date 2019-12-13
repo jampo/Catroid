@@ -55,11 +55,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Fastlane
 RUN curl -sSL https://rvm.io/pkuczynski.asc | gpg --import - \
-    && curl -sSL https://get.rvm.io | bash -s stable
-    #&& . /etc/profile.d/rvm.sh \
-RUN ["/bin/bash", "-c", "source /etc/profile.d/rvm.sh"]
-RUN rvm install 2.4
-RUN rvm --version
+    && curl -sSL https://get.rvm.io | bash -s stable \
+    && . /etc/profile.d/rvm.sh \
+    && rvm install 2.4 \
+	&& rvm --version
 RUN apt-get remove -y rubygems \ rubygems
 RUN apt-get update && apt-get install -y --no-install-recommends \
         rubygems \
