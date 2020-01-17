@@ -6,7 +6,6 @@ pipeline {
     }
 
     environment {
-        BUILD_ARGS = '--build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) --build-arg KVM_GROUP_ID=$(getent group kvm | cut -d: -f3)'
         DOCKERFILE = 'Dockerfile.jenkins'
         DOCKER_DIR = 'docker'
         DOCKER_REPO = "catrobat"
@@ -30,10 +29,10 @@ pipeline {
                 // Build docker image
                 // Use --pull to force pull base docker image
                 // Use --force-rm  and --no-cache to remove intermediate images and not use cache
-                sh 'docker build --pull --force-rm --no-cache ' +
-                        '-t ${IMAGE_NAME} $BUILD_ARGS ' +
-                        '-f $DOCKER_DIR/$DOCKERFILE ' +
-                        '$DOCKER_DIR'
+                sh '''#!/bin/bash
+                    BUILD_ARGS="--build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) --build-arg KVM_GROUP_ID=$(getent group kvm | cut -d: -f3)"
+                    docker build --pull --force-rm --no-cache -t ${IMAGE_NAME} $BUILD_ARGS -f $DOCKER_DIR/$DOCKERFILE $DOCKER_DIR
+                '''
             }
         }
 
