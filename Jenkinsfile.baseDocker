@@ -59,7 +59,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'catrobat-dockerhub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                     sh 'docker login -u $USERNAME -p $PASSWORD'
                 }
-                sh 'echo "docker push DOCKER_REPO/${IMAGE_NAME}"'
+                sh 'echo "docker push $DOCKER_REPO/${IMAGE_NAME}"'
                 sh 'docker logout'
             }
         }
