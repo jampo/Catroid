@@ -29,25 +29,29 @@ pipeline {
             steps {
                 // Build docker image
                 // Use --pull to force pull base docker image
-                sh 'echo "docker build --pull -t ${IMAGE_NAME} $BUILD_ARGS -f $DOCKER_DIR/$DOCKERFILE $DOCKER_DIR"'
+                // Use --force-rm  and --no-cache to remove intermediate images and not use cache
+                sh 'docker build --pull --force-rm --no-cache ' +
+                        '-t ${IMAGE_NAME} $BUILD_ARGS ' +
+                        '-f $DOCKER_DIR/$DOCKERFILE ' +
+                        '$DOCKER_DIR'
             }
         }
 
         stage('Tag docker image') {
             steps {
                 // Tag image with Year and Week number
-                sh 'echo "docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y-%V)"'
+                sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y-%V)'
 
                 // Tag image with Year Week number and day of week
-                sh 'echo "docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y-%V-%u)"'
+                sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y-%V-%u)'
 
                 script {
                     if (env.TAG_STABLE?.toBoolean()){
-                        sh 'echo "docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:stable"'
+                        sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:stable'
                     }
 
                     if (env.TAG_LATEST?.toBoolean()){
-                        sh 'echo "docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:latest"'
+                        sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:latest'
                     }
                 }
             }
@@ -59,6 +63,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'catrobat-dockerhub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                     sh 'docker login -u $USERNAME -p $PASSWORD'
                 }
+                sh 'docker image ls'
                 sh 'echo "docker push $DOCKER_REPO/${IMAGE_NAME}"'
                 sh 'docker logout'
             }
