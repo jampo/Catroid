@@ -13,9 +13,9 @@ pipeline {
     }
 
     parameters {
-        booleanParam name: 'PUSH_STABLE_TAG', defaultValue: false, description: 'When selected image will be pushed with tag stable'
+        booleanParam name: 'TAG_STABLE', defaultValue: false, description: 'When selected image will be tagged stable'
+        booleanParam name: 'TAG_LATEST', defaultValue: true, description: 'When selected image will be tagget latest'
         string name: 'IMAGE_NAME', defaultValue: 'catrobat-android', description: 'Name for docker image to build '
-        string name: 'BUILD_ARGS', defaultValue: '', description: 'build arguments for docker build'
     }
 
     options {
@@ -29,17 +29,27 @@ pipeline {
             steps {
                 // Build docker image
                 // Use --pull to force pull base docker image
-                sh 'echo "docker build --pull -t $IMAGE_NAME $BUILD_ARGS -f $DOCKER_DIR/$DOCKERFILE DOCKER_DIR"'
+                sh 'echo "docker build --pull -t ${IMAGE_NAME} $BUILD_ARGS -f $DOCKER_DIR/$DOCKERFILE $DOCKER_DIR"'
             }
         }
 
         stage('Tag docker image') {
             steps {
                 // Tag image with Year and Week number
-                sh 'echo "docker tag $IMAGE_NAME $DOCKER_REPO $IMAGE_NAME:$(date +%Y-%V)"'
+                sh 'echo "docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y-%V)"'
 
                 // Tag image with Year Week number and day of week
-                sh 'echo "docker tag $IMAGE_NAME $DOCKER_REPO/$IMAGE_NAME:$(date +%Y-%V-%u)"'
+                sh 'echo "docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y-%V-%u)"'
+
+                script {
+                    if (env.TAG_STABLE?.toBoolean()){
+                        sh 'echo "docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:stable"'
+                    }
+
+                    if (env.TAG_LATEST?.toBoolean()){
+                        sh 'echo "docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:latest"'
+                    }
+                }
             }
         }
 
@@ -49,7 +59,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'catrobat-dockerhub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                     sh 'docker login -u $USERNAME -p $PASSWORD'
                 }
-                sh 'echo "docker push DOCKER_REPO/$IMAGE_NAME"'
+                sh 'echo "docker push DOCKER_REPO/${IMAGE_NAME}"'
                 sh 'docker logout'
             }
         }
