@@ -29,17 +29,17 @@ pipeline {
             steps {
                 // Build docker image
                 // Use --pull to force pull base docker image
-                sh """echo docker build --pull -t ${IMAGE_NAME} ${BUILD_ARGS} -f ${DOCKER_DIR}/${DOCKERFILE} ${DOCKER_DIR}"""
+                sh 'echo "docker build --pull -t $IMAGE_NAME $BUILD_ARGS -f $DOCKER_DIR/$DOCKERFILE DOCKER_DIR"'
             }
         }
 
         stage('Tag docker image') {
             steps {
                 // Tag image with Year and Week number
-                sh """echo docker tag ${IMAGE_NAME} ${DOCKER_REPO}/${IMAGE_NAME}:$(date +%Y-%V)"""
+                sh 'echo "docker tag $IMAGE_NAME $DOCKER_REPO $IMAGE_NAME:$(date +%Y-%V)"'
 
                 // Tag image with Year Week number and day of week
-                sh """echo docker tag ${IMAGE_NAME} ${DOCKER_REPO}/${IMAGE_NAME}:$(date +%Y-%V-%u)"""
+                sh 'echo "docker tag $IMAGE_NAME $DOCKER_REPO/$IMAGE_NAME:$(date +%Y-%V-%u)"'
             }
         }
 
@@ -47,10 +47,10 @@ pipeline {
             steps {
                 // Push image to dockerhub use credentials
                 withCredentials([usernamePassword(credentialsId: 'catrobat-dockerhub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                    sh """docker login -u ${USERNAME} -p ${PASSWORD}"""
+                    sh 'docker login -u $USERNAME -p $PASSWORD'
                 }
-                sh """echo docker push ${DOCKER_REPO}/${IMAGE_NAME}"""
-                sh """docker logout"""
+                sh 'echo "docker push DOCKER_REPO/$IMAGE_NAME"'
+                sh 'docker logout'
             }
         }
     }
