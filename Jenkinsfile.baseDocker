@@ -63,7 +63,7 @@ pipeline {
                     sh 'docker login -u $USERNAME -p $PASSWORD'
                 }
                 sh 'docker image ls'
-                sh 'echo "docker push $DOCKER_REPO/${IMAGE_NAME}"'
+                sh 'docker push $DOCKER_REPO/${IMAGE_NAME}'
                 sh 'docker logout'
             }
         }
