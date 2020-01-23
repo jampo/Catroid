@@ -210,10 +210,8 @@ pipeline {
 
                 stage('2') {
                     agent {
-                        dockerfile {
-                            filename d.fileName
-                            dir d.dir
-                            additionalBuildArgs d.buildArgs
+                        docker {
+                            image d.image
                             args d.args
                             label useDebugLabelParameter(d.label)
                         }
