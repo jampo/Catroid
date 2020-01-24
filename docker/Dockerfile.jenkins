@@ -62,8 +62,7 @@ RUN ["/bin/bash", "-c", "curl -sSL https://rvm.io/pkuczynski.asc | gpg --import 
 	&& source /etc/profile.d/rvm.sh \
 	&& rvm install 2.4 \
 	&& ruby --version \
-	&& rvm rubygems 2.4.0 \
-	&& gem install fastlane -NV"] 
+	&& rvm rubygems 2.4.0"] 
 
 
 # User Management
