@@ -58,11 +58,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 #    && curl -sSL https://get.rvm.io | bash -s stable
     #&& . /etc/profile.d/rvm.sh \
 RUN ["/bin/bash", "-c", "curl -sSL https://rvm.io/pkuczynski.asc | gpg --import - \
-    && curl -sSL https://get.rvm.io | bash -s stable 
-	&& source /etc/profile.d/rvm.sh 
-	&& rvm install 2.4 
-	&& ruby --version 
-	&& rvm rubygems 2.4.0
+    && curl -sSL https://get.rvm.io | bash -s stable \
+	&& source /etc/profile.d/rvm.sh \
+	&& rvm install 2.4 \
+	&& ruby --version \
+	&& rvm rubygems 2.4.0 \
 	&& apt-get update && apt-get install -y --no-install-recommends \
         # rubygems \
         ruby-dev \
