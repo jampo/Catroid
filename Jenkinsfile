@@ -90,7 +90,10 @@ pipeline {
 						stage('fastlane version') {
 							steps {
 								echo 'fastlane version'
-								bash "fastlane --version"
+								 bash '''#!/bin/bash
+									fastlane --version
+								'''
+							
 								sh "fastlane actions"
 								echo 'ruby version'
 								sh "ruby --version"
