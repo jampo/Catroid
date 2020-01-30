@@ -57,12 +57,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN curl -sSL https://rvm.io/pkuczynski.asc | gpg --import - \
     && curl -sSL https://get.rvm.io | bash -s stable
     #&& . /etc/profile.d/rvm.sh \
-RUN ["/bin/bash", "-c", "source /home/catroid/.rvm/scripts/rvm.sh \
+RUN ["/bin/bash", "-c", "source /etc/profile.d/rvm.sh \
  && rvm install 2.4 \
  && ruby --version \ 
  && rvm rubygems 2.4.0 \
  && gem install fastlane -NV \
- && echo \"source /home/catroid/.rvm/scripts/rvm.sh\" >> ~/.bashrc"] 
+ && echo \"source /etc/profile.d/rvm.sh\" >> ~/.bashrc"] 
  #&& PATH=$PATH
  
 #RUN cat "source /etc/profile.d/rvm.sh" >> ~/.bashrc
