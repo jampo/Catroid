@@ -89,7 +89,12 @@ pipeline {
                     stages {
 						stage('fastlane version') {
 							steps {
-								echo 'fastlane version'
+								echo 'fastlane version with sourcing'
+								sh "#!/bin/bash \n" +
+								"source ~/.bashrc && fastlane --version"
+								echo 'fastlane versio without sourcing'
+								sh "#!/bin/bash \n" +
+								"fastlane --version"
 								sh "fastlane --version"
 								sh "fastlane actions"
 								echo 'ruby version'
