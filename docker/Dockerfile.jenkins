@@ -62,11 +62,13 @@ RUN ["/bin/bash", "-c", "source /etc/profile.d/rvm.sh \
  && ruby --version \ 
  && rvm rubygems 2.4.0 \
  && gem install fastlane -NV \
+ && fastlane --version \
  && echo \"source /etc/profile.d/rvm.sh\" >> ~/.bashrc \
  && cat ~/.bashrc \
  && source ~/.bashrc"] 
  #&& PATH=$PATH
- 
+# sh should also know fastlane 
+RUN fastlane --version
 #RUN cat "source /etc/profile.d/rvm.sh" >> ~/.bashrc
 #RUN echo "source /etc/profile.d/rvm.sh" >> ~/.bashrc
 
