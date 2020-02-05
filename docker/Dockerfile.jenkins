@@ -64,12 +64,12 @@ RUN ["/bin/bash", "-c", "source /etc/profile.d/rvm.sh \
  && gem install fastlane -NV \
  && fastlane --version \
  && echo \"source /etc/profile.d/rvm.sh\" >> ~/.bashrc \
- && cat ~/.bashrc \
+ && echo $PATH
  && source ~/.bashrc"] 
  #&& PATH=$PATH
 # only found in bash
 #RUN fastlane --version
-RUN ["/bin/bash", "-c", "fastlane --version"]
+#RUN ["/bin/bash", "-c", "fastlane --version"]
 
 #RUN cat "source /etc/profile.d/rvm.sh" >> ~/.bashrc
 #RUN echo "source /etc/profile.d/rvm.sh" >> ~/.bashrc
