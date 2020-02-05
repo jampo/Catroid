@@ -69,6 +69,8 @@ RUN ["/bin/bash", "-c", "source /etc/profile.d/rvm.sh \
  #&& PATH=$PATH
 # only found in bash
 #RUN fastlane --version
+RUN ["/bin/bash", "-c", "fastlane --version"]
+
 #RUN cat "source /etc/profile.d/rvm.sh" >> ~/.bashrc
 #RUN echo "source /etc/profile.d/rvm.sh" >> ~/.bashrc
 
