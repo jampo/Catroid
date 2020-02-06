@@ -89,9 +89,10 @@ pipeline {
                     stages {
 						stage('fastlane version') {
 							steps {
+								echo "$PATH"
 								echo 'fastlane version with sourcing'
 								sh "#!/bin/bash \n" +
-								"echo /"$PATH/" && source ~/.bashrc && fastlane --version"
+								"source ~/.bashrc && fastlane --version"
 								echo 'fastlane versio without sourcing'
 								sh "#!/bin/bash \n" +
 								"fastlane --version"
