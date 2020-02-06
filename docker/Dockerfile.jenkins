@@ -64,7 +64,7 @@ RUN ["/bin/bash", "-c", "source /etc/profile.d/rvm.sh \
  && gem install fastlane -NV \
  && fastlane --version \
  #&& echo \"source /etc/profile.d/rvm.sh\" >> ~/.bashrc \
- && $PATH=$PATH:\"/usr/local/rvm/gems/ruby-2.4.6/gems/fastlane-2.141.0/bin\" "]
+ && PATH=$PATH:\"/usr/local/rvm/gems/ruby-2.4.6/gems/fastlane-2.141.0/bin\" "]
  #&& source ~/.bashrc"] 
  #&& PATH=$PATH
 # only found in bash
