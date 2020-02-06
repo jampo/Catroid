@@ -91,7 +91,7 @@ pipeline {
 							steps {
 								echo 'fastlane version with sourcing'
 								sh "#!/bin/bash \n" +
-								"source ~/.bashrc && fastlane --version"
+								"echo /"$PATH/" && source ~/.bashrc && fastlane --version"
 								echo 'fastlane versio without sourcing'
 								sh "#!/bin/bash \n" +
 								"fastlane --version"
