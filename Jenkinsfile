@@ -2,6 +2,7 @@
 
 class DockerParameters {
     def image = 'catrobat/catrobat-android'
+    def imageLabel = 'stable'
     def args = '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=14G'
     def label = 'LimitedEmulator'
 }
@@ -40,6 +41,11 @@ def useDebugLabelParameter(defaultLabel) {
     return env.DEBUG_LABEL?.trim() ? env.DEBUG_LABEL : defaultLabel
 }
 
+def useDockerLabelParameter(dockerImage, defaultLabel) {
+    return dockerImage + ':' + env.DOCKER_LABEL?.trim() ? env.DOCKER_LABEL : defaultLabel
+}
+
+
 pipeline {
     agent none
 
@@ -48,6 +54,7 @@ pipeline {
                 'APKs will point to this Catrobat web server, useful for testing web changes. E.g https://web-test.catrob.at'
         booleanParam name: 'BUILD_ALL_FLAVOURS', defaultValue: false, description: 'When selected all flavours are built and archived as artifacts that can be installed alongside other versions of the same APK.'
         string name: 'DEBUG_LABEL', defaultValue: '', description: 'For debugging when entered will be used as label to decide on which slaves the jobs will run.'
+        string name: 'DOCKER_LABEL', defaultValue: '', description: 'When entered will be used as label for docker catrobat/catroid-android image to build'
     }
 
     options {
@@ -67,7 +74,7 @@ pipeline {
                 stage('1') {
                     agent {
                         docker {
-                            image d.image
+                            image useDockerLabelParameter(d.image, d.imageLabel)
                             args d.args
                             label useDebugLabelParameter(d.label)
                         }
@@ -211,7 +218,7 @@ pipeline {
                 stage('2') {
                     agent {
                         docker {
-                            image d.image
+                            image useDockerLabelParameter(d.image, d.imageLabel)
                             args d.args
                             label useDebugLabelParameter(d.label)
                         }
