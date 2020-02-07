@@ -9,12 +9,13 @@ pipeline {
         DOCKERFILE = 'Dockerfile.jenkins'
         DOCKER_DIR = 'docker'
         DOCKER_REPO = "catrobat"
+
     }
 
     parameters {
         booleanParam name: 'TAG_STABLE', defaultValue: false, description: 'When selected image will be tagged stable'
-        booleanParam name: 'TAG_LATEST', defaultValue: true, description: 'When selected image will be tagget latest'
-        string name: 'IMAGE_NAME', defaultValue: 'catrobat-android', description: 'Name for docker image to build '
+        booleanParam name: 'TAG_TESTING', defaultValue: true, description: 'When selected image will be tagged testing'
+        string name: 'IMAGE_NAME', defaultValue: 'catrobat-android', description: 'Name for docker image to build'
     }
 
     options {
@@ -36,35 +37,26 @@ pipeline {
             }
         }
 
-        stage('Tag docker image') {
+        stage('Tag and push docker image') {
             steps {
-                // Tag image with Year and Week number
-                sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y-%V)'
+                docker.withRegistry('https://hub.docker.com', 'catrobat-dockerhub') {
 
-                // Tag image with Year Week number and day of week
-                sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y-%V-%u)'
+                    // Tag image with YearMonthDay+BuildNumber
+                    sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y%m%d).${env.BUILD_NUMBER}'
+                    sh 'docker push ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y%m%d).${env.BUILD_NUMBER}'
 
-                script {
-                    if (env.TAG_STABLE?.toBoolean()){
-                        sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:stable'
-                    }
+                    script {
+                        if (env.TAG_STABLE?.toBoolean()) {
+                            sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:stable'
+                            sh 'docker push ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:stable'
+                        }
 
-                    if (env.TAG_LATEST?.toBoolean()){
-                        sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:latest'
+                        if (env.TAG_TESTING?.toBoolean()) {
+                            sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:testing'
+                            sh 'docker push ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:testing'
+                        }
                     }
                 }
-            }
-        }
-
-        stage('Push docker image') {
-            steps {
-                // Push image to dockerhub use credentials
-                withCredentials([usernamePassword(credentialsId: 'catrobat-dockerhub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                    sh 'docker login -u $USERNAME -p $PASSWORD'
-                }
-                sh 'docker image ls'
-                sh 'docker push $DOCKER_REPO/${IMAGE_NAME}'
-                sh 'docker logout'
             }
         }
     }
