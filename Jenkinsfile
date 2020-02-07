@@ -89,6 +89,7 @@ pipeline {
                     stages {
 						stage('fastlane version') {
 							steps {
+								sh "ruby --version"
 								echo "$PATH"
 								sh "#!/bin/bash \n" +
 								"source ~/.bashrc && fastlane --version"
