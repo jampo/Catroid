@@ -39,13 +39,12 @@ pipeline {
 
         stage('Tag and push docker image') {
             steps {
-                docker.withRegistry('https://hub.docker.com', 'catrobat-dockerhub') {
+                script {
+                    docker.withRegistry('https://hub.docker.com', 'catrobat-dockerhub') {
+                        // Tag image with YearMonthDay+BuildNumber
+                        sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y%m%d).${env.BUILD_NUMBER}'
+                        sh 'docker push ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y%m%d).${env.BUILD_NUMBER}'
 
-                    // Tag image with YearMonthDay+BuildNumber
-                    sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y%m%d).${env.BUILD_NUMBER}'
-                    sh 'docker push ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y%m%d).${env.BUILD_NUMBER}'
-
-                    script {
                         if (env.TAG_STABLE?.toBoolean()) {
                             sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:stable'
                             sh 'docker push ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:stable'
