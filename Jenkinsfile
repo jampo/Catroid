@@ -42,9 +42,9 @@ def useDebugLabelParameter(defaultLabel) {
 }
 
 def useDockerLabelParameter(dockerImage, defaultLabel) {
-    return dockerImage + ':' + env.DOCKER_LABEL?.trim() ? env.DOCKER_LABEL : defaultLabel
+    def label = env.DOCKER_LABEL?.trim() ? env.DOCKER_LABEL : defaultLabel
+    return dockerImage + ':' + label
 }
-
 
 pipeline {
     agent none
