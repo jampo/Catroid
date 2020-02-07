@@ -40,20 +40,23 @@ pipeline {
         stage('Tag and push docker image') {
             steps {
                 script {
-                    docker.withRegistry('https://docker.io', 'catrobat-dockerhub') {
-                        // Tag image with YearMonthDay+BuildNumber
-                        sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y%m%d).${env.BUILD_NUMBER}'
-                        sh 'docker push $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y%m%d).${env.BUILD_NUMBER}'
+                    // Push image to dockerhub use credentials
+                    withCredentials([usernamePassword(credentialsId: 'catrobat-dockerhub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                        sh 'docker login -u $USERNAME -p $PASSWORD'
+                    }
 
-                        if (env.TAG_STABLE?.toBoolean()) {
-                            sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:stable'
-                            sh 'docker push $DOCKER_REPO/${IMAGE_NAME}:stable'
-                        }
+                    // Tag image with YearMonthDay+BuildNumber
+                    sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y%m%d).${BUILD_NUMBER}'
+                    sh 'docker push $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y%m%d).${BUILD_NUMBER}'
 
-                        if (env.TAG_TESTING?.toBoolean()) {
-                            sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:testing'
-                            sh 'docker push $DOCKER_REPO/${IMAGE_NAME}:testing'
-                        }
+                    if (env.TAG_STABLE?.toBoolean()) {
+                        sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:stable'
+                        sh 'docker push $DOCKER_REPO/${IMAGE_NAME}:stable'
+                    }
+
+                    if (env.TAG_TESTING?.toBoolean()) {
+                        sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:testing'
+                        sh 'docker push $DOCKER_REPO/${IMAGE_NAME}:testing'
                     }
                 }
             }
@@ -61,6 +64,9 @@ pipeline {
     }
 
     post {
+        always {
+            sh 'docker logout'
+        }
         changed {
             node('master') {
                 notifyChat()
