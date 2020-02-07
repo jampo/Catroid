@@ -77,6 +77,7 @@ pipeline {
                             image useDockerLabelParameter(d.image, d.imageLabel)
                             args d.args
                             label useDebugLabelParameter(d.label)
+                            alwaysPull true
                         }
                     }
 
@@ -221,6 +222,7 @@ pipeline {
                             image useDockerLabelParameter(d.image, d.imageLabel)
                             args d.args
                             label useDebugLabelParameter(d.label)
+                            alwaysPull true
                         }
                     }
 
