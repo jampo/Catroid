@@ -43,16 +43,16 @@ pipeline {
                     docker.withRegistry('https://docker.io', 'catrobat-dockerhub') {
                         // Tag image with YearMonthDay+BuildNumber
                         sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y%m%d).${env.BUILD_NUMBER}'
-                        sh 'docker push ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y%m%d).${env.BUILD_NUMBER}'
+                        sh 'docker push $DOCKER_REPO/${IMAGE_NAME}:$(date +%Y%m%d).${env.BUILD_NUMBER}'
 
                         if (env.TAG_STABLE?.toBoolean()) {
                             sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:stable'
-                            sh 'docker push ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:stable'
+                            sh 'docker push $DOCKER_REPO/${IMAGE_NAME}:stable'
                         }
 
                         if (env.TAG_TESTING?.toBoolean()) {
                             sh 'docker tag ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:testing'
-                            sh 'docker push ${IMAGE_NAME} $DOCKER_REPO/${IMAGE_NAME}:testing'
+                            sh 'docker push $DOCKER_REPO/${IMAGE_NAME}:testing'
                         }
                     }
                 }
