@@ -89,14 +89,14 @@ pipeline {
                     stages {
 						stage('fastlane version') {
 							steps {
-								sh "ruby --version"
+								sh "/usr/local/rvm/gems/ruby-2.4.6/gems/fastlane-2.141.0/bin/fastlane --version"
 								echo "$PATH"
 								sh "#!/bin/bash \n" +
 								"source ~/.bashrc && fastlane --version"
 								echo 'fastlane versio without sourcing'
 								sh "#!/bin/bash \n" +
 								"fastlane --version"
-								sh "fastlane --version"
+								sh "/usr/local/rvm/gems/ruby-2.4.6/gems/fastlane-2.141.0/bin/fastlane --version"
 								sh "fastlane actions"
 								echo 'ruby version'
 								sh "ruby --version"
