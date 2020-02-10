@@ -71,7 +71,7 @@ RUN ["/bin/bash", "-c", "source /etc/profile.d/rvm.sh \
 # only found in bash
 #RUN fastlane --version
 #RUN ["/bin/bash", "-c", "fastlane --version"]
-
+RUN /usr/local/rvm/gems/ruby-2.4.6/gems/fastlane-2.141.0/bin/fastlane --version
 #RUN cat "source /etc/profile.d/rvm.sh" >> ~/.bashrc
 #RUN echo "source /etc/profile.d/rvm.sh" >> ~/.bashrc
 
