@@ -9,7 +9,6 @@ pipeline {
         DOCKERFILE = 'Dockerfile.jenkins'
         DOCKER_DIR = 'docker'
         DOCKER_REPO = "catrobat"
-
     }
 
     parameters {
@@ -22,6 +21,10 @@ pipeline {
         timeout(time: 2, unit: 'HOURS')
         timestamps()
         buildDiscarder(logRotator(numToKeepStr: '30'))
+    }
+
+    triggers {
+        cron(env.BRANCH_NAME == 'develop' ? '@midnight' : '')
     }
 
     stages {
